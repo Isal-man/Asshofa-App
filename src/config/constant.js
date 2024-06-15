@@ -1,0 +1,1 @@
+export const APP_BACKEND = "http://localhost:9090"
