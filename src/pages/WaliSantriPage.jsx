@@ -44,39 +44,31 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const SantriPage = () => {
+export const WaliSantriPage = () => {
   const [rows, setRows] = useState([]);
-  const [waliSantri, setWaliSantri] = useState([]);
   const [total, setTotal] = useState();
   const [notification, setNotification] = useState("");
-  const [santriId, setSantriId] = useState("");
-  const [namaWali, setNamaWali] = useState("")
+  const [waliSantriId, setWaliSantriId] = useState("");
   const [open, setOpen] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [santri, setSantri] = useState({
+  const [walisantri, setWaliSantri] = useState({
     nama: "",
     alamat: "",
-    tanggalLahir: "",
-    idWali: "",
+    telepon: ""
   });
   const [param, setParam] = useState({
     nama: "",
-    bulan: "",
-    tahun: "",
     alamat: "",
+    telepon: "",
     page: 1,
     limit: 10,
   });
-  const waliSantriProps = {
-    options: waliSantri,
-    getOptionLabel: (options) => options?.nama || "",
-  };
 
   const columns = [
     {
-      id: "name",
+      id: "nama",
       label: "Nama",
       minWidth: 250,
       filter: (
@@ -87,29 +79,6 @@ export const SantriPage = () => {
           className="w-full"
           onBlur={(e) => handleNama(e)}
         />
-      ),
-    },
-    {
-      id: "tanggalLahir",
-      label: "Tanggal Lahir",
-      minWidth: 250,
-      filter: (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <div className="flex flex-row">
-            <DatePicker
-              label={"Month"}
-              views={["month"]}
-              sx={{ width: "35%", height: "35%" }}
-              onChange={(e) => handleMonth(e)}
-            />
-            <DatePicker
-              label={"Year"}
-              views={["year"]}
-              sx={{ width: "35%", height: "35%" }}
-              onChange={(e) => handleYear(e)}
-            />
-          </div>
-        </LocalizationProvider>
       ),
     },
     {
@@ -127,9 +96,18 @@ export const SantriPage = () => {
       ),
     },
     {
-      id: "namaWali",
-      label: "Wali Santri",
+      id: "telepon",
+      label: "Telepon",
       minWidth: 250,
+      filter: (
+        <TextField
+          id="outlined-basic"
+          label="Telepon"
+          variant="outlined"
+          className="w-full"
+          onBlur={(e) => handleAlamat(e)}
+        />
+      ),
     },
     {
       id: "action",
@@ -140,24 +118,14 @@ export const SantriPage = () => {
 
   useEffect(() => {
     load({ ...param });
-    loadWaliSantri();
   }, []);
 
-  const loadWaliSantri = async () => {
-    const request = await api.get(
-      APP_BACKEND + "/wali-santri/get-all-wali-santri"
-    );
-    const response = await request?.data;
-    const data = response?.data?.list;
-    setWaliSantri(data);
-  };
-
   const load = async (props) => {
-    const { nama, bulan, tahun, alamat, page, limit } = props;
+    const { nama, telepon, alamat, page, limit } = props;
 
     const request = await api.get(
       APP_BACKEND +
-        `/santri/get-list-santri?nama=${nama}&bulan=${bulan}&tahun=${tahun}&alamat=${alamat}&page=${page}&limit=${limit}`
+        `/wali-santri/get-list-wali-santri?nama=${nama}&telepon=${telepon}&alamat=${alamat}&page=${page}&limit=${limit}`
     );
     const response = await request.data;
     const data = response?.data?.list;
@@ -173,25 +141,18 @@ export const SantriPage = () => {
     setParam({ ...param, page: 1, nama });
   };
 
-  const handleMonth = (e) => {
-    const bulan = e?.$d?.toLocaleString("en", { month: "long" });
-    setRows([]);
-    load({ ...param, page: 1, bulan });
-    setParam({ ...param, page: 1, bulan });
-  };
-
-  const handleYear = (e) => {
-    const tahun = e?.$d?.toLocaleString("en", { year: "numeric" });
-    setRows([]);
-    load({ ...param, page: 1, tahun });
-    setParam({ ...param, page: 1, tahun });
-  };
-
   const handleAlamat = (e) => {
     const alamat = e.target.value;
     setRows([]);
     load({ ...param, page: 1, alamat });
     setParam({ ...param, page: 1, alamat });
+  };
+
+  const handleTelepon = (e) => {
+    const telepon = e.target.value;
+    setRows([]);
+    load({ ...param, page: 1, telepon });
+    setParam({ ...param, page: 1, telepon });
   };
 
   const handleChangePage = (_e, value) => {
@@ -209,14 +170,13 @@ export const SantriPage = () => {
   const handleUpdate = (data) => {
     setIsUpdate(true);
     setOpen(true);
-    setSantri(data);
-    setSantriId(data?.id);
-    setNamaWali(data?.namaWali)
+    setWaliSantri(data);
+    setWaliSantriId(data?.id);
   };
 
-  const handleDelete = async (idSantri) => {
+  const handleDelete = async (idWaliSantri) => {
     const request = await api.delete(
-      APP_BACKEND + `/santri/delete?id=${idSantri}`
+      APP_BACKEND + `/wali-santri/delete?id=${idWaliSantri}`
     );
     const response = await request?.data?.detail;
     setNotification(response);
@@ -243,8 +203,8 @@ export const SantriPage = () => {
     setLoading(true);
 
     const method = isUpdate
-      ? api.put(`/santri/update?id=${santriId}`, santri)
-      : api.post(APP_BACKEND + "/santri/create", santri);
+      ? api.put(`/wali-santri/update?id=${waliSantriId}`, walisantri)
+      : api.post(APP_BACKEND + "/wali-santri/create", walisantri);
 
     const request = await method;
 
@@ -264,14 +224,14 @@ export const SantriPage = () => {
         <MiniDrawer />
         <div className="flex flex-col mt-14 mr-4 h-5/6 w-full p-4 bg-gray-50 rounded-md">
           <div className="flex justify-between w-full p-2">
-            <p className="font-bold text-3xl">Data Santri</p>
+            <p className="font-bold text-3xl">Data Wali Santri</p>
             <Button
               variant="contained"
-              className="h-10 w-60"
+              className="h-10 w-90"
               startIcon={<AddCircleOutline />}
               onClick={handleClickOpen}
             >
-              Tambah Data Santri
+              Tambah Data Wali Santri
             </Button>
           </div>
           <Divider />
@@ -302,17 +262,10 @@ export const SantriPage = () => {
                           {row.nama}
                         </TableCell>
                         <TableCell style={{ minWidth: 250 }} align="left">
-                          {new Date(row.tanggalLahir).toLocaleString("id", {
-                            year: "numeric",
-                            month: "long",
-                            day: "2-digit",
-                          })}
-                        </TableCell>
-                        <TableCell style={{ minWidth: 250 }} align="left">
                           {row.alamat}
                         </TableCell>
                         <TableCell style={{ minWidth: 250 }} align="left">
-                          {row.namaWali}
+                          {row.telepon}
                         </TableCell>
                         <TableCell style={{ minWidth: 250 }} align="left">
                           <IconButton onClick={() => handleUpdate(row)}>
@@ -385,7 +338,7 @@ export const SantriPage = () => {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              {isUpdate ? "Form Update Santri" : "Form Tambah Santri"}
+              {isUpdate ? "Form Update Wali Santri" : "Form Tambah Wali Santri"}
             </Typography>
           </Toolbar>
           <Paper
@@ -398,41 +351,24 @@ export const SantriPage = () => {
               label="Nama"
               variant="outlined"
               className="w-2/5"
-              value={santri.nama}
-              onChange={(e) => setSantri({ ...santri, nama: e.target.value })}
+              value={walisantri.nama}
+              onChange={(e) => setWaliSantri({ ...walisantri, nama: e.target.value })}
             />
             <TextField
               id="outlined-basic"
               label="Alamat"
               variant="outlined"
               className="w-2/5"
-              value={santri.alamat}
-              onChange={(e) => setSantri({ ...santri, alamat: e.target.value })}
+              value={walisantri.alamat}
+              onChange={(e) => setWaliSantri({ ...walisantri, alamat: e.target.value })}
             />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Tanggal Lahir"
-                className="w-2/5"
-                value={dayjs(santri.tanggalLahir)}
-                onChange={(e) => setSantri({ ...santri, tanggalLahir: e?.$d })}
-              />
-            </LocalizationProvider>
-            <Autocomplete
-              {...waliSantriProps}
-              id="wali-santri"
-              value={namaWali ? namaWali : waliSantri?.nama}
-              onChange={(_e, value) => {  
-                setSantri({...santri, idWali: value?.id})
-              }}
-              noOptionsText={
-                <span>
-                  Tidak ada opsi yang sesuai. <Link to="/wali-santri" className="underline text-blue-500">Tambah data wali santri</Link>
-                </span>
-              }
-              renderInput={(params) => (
-                <TextField {...params} label="Pilih Wali" variant="standard" />
-              )}
+            <TextField
+              id="outlined-basic"
+              label="Telepon"
+              variant="outlined"
               className="w-2/5"
+              value={walisantri.telepon}
+              onChange={(e) => setWaliSantri({ ...walisantri, telepon: e.target.value })}
             />
             <LoadingButton
               size="large"
@@ -443,7 +379,7 @@ export const SantriPage = () => {
               variant="contained"
               className="w-2/5"
             >
-              <span>{isUpdate ? "Update Santri" : "Tambah Santri"}</span>
+              <span>{isUpdate ? "Update Wali Santri" : "Tambah Wali Santri"}</span>
             </LoadingButton>
           </Paper>
         </AppBar>
