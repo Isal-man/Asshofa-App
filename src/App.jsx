@@ -1,19 +1,10 @@
-import { Outlet, Route, Routes } from 'react-router-dom'
-import { createContext, useState } from 'react'
-
-export const AuthContext = createContext({
-  token: null,
-  setToken: () => {}
-})
-
+import Routes from "./routes/Routes";
+import AuthService from "./services/AuthService";
 function App() {
-
-  const [token, setToken] = useState()
-
   return (
-    <AuthContext.Provider value={{token, setToken}}>
-      <Outlet />
-    </AuthContext.Provider>
+    <AuthService>
+      <Routes />
+    </AuthService>
   )
 }
 

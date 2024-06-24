@@ -1,5 +1,5 @@
-import { HomePage } from "./HomePage";
+import { SantriPage } from "./SantriPage";
 import { LoginPage } from "./LoginPage";
 import { RegisterPage } from "./RegisterPage";
 
-export { LoginPage, HomePage, RegisterPage };
+export { LoginPage, SantriPage, RegisterPage };

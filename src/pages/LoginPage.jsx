@@ -13,8 +13,10 @@ import LoginIcon from '@mui/icons-material/Login';
 import { useState } from "react";
 import { APP_BACKEND } from "../config/constant";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../services/AuthService";
 
 export const LoginPage = () => {
+  const {handleToken} = useAuth()
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -39,9 +41,9 @@ export const LoginPage = () => {
 
     const response = await request.json()
 
-    localStorage.setItem("user", JSON.stringify(response))
+    handleToken(response)
     setLoading(false)
-    navigate("/", {
+    navigate("/santri", {
       replace: true
     })
 	}

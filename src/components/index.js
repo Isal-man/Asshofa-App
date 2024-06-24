@@ -1,3 +1,4 @@
-import { ProtectedRoute } from "./ProtectedRoute"
+import { MiniDrawer } from "./MiniDrawer";
+import { ProtectedRoute } from "./ProtectedRoute";
 
-export {ProtectedRoute}
+export { ProtectedRoute, MiniDrawer};

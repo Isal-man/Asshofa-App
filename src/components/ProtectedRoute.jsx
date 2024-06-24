@@ -1,15 +1,15 @@
-import { useContext, useEffect } from "react";
-import { Navigate } from "react-router-dom";
-import { AuthContext } from "../App";
+import {Navigate, Outlet} from "react-router-dom"
+import { useAuth } from "../services/AuthService"
 
-export const ProtectedRoute = ({children}) => {
-    const {token,setToken} = useContext(AuthContext)
+export const ProtectedRoute = () => {
+    const {token} = useAuth();
 
-    useEffect(() => {
-        const data = JSON.parse(localStorage.getItem("user"))
-        setToken(data?.token)
-        console.log(token, "ini token");
-    }, [token, setToken])
 
-    return token ? (children) : (<Navigate to={"/login"} replace={true} />)
+    if (!token) {
+        // if not authenticated, redirect to the login page
+        return <Navigate to={"/login"} replace={true} />
+    }
+
+    // if authenticated, redirect to child routes
+    return <Outlet />
 }
