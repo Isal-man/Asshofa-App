@@ -7,13 +7,15 @@ import {
   IconButton,
   Link
 } from "@mui/material";
-import { Visibility, VisibilityOff   } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab"
-import LoginIcon from '@mui/icons-material/Login';
 import { useState } from "react";
 import { APP_BACKEND } from "../config/constant";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../services/AuthService";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 
 export const LoginPage = () => {
   const {handleToken} = useAuth()
@@ -91,7 +93,7 @@ export const LoginPage = () => {
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                      {showPassword ? <FontAwesomeIcon icon={faEye} /> :  <FontAwesomeIcon icon={faEyeSlash} />}
                     </IconButton>
                   </InputAdornment>
                 }
@@ -101,7 +103,7 @@ export const LoginPage = () => {
             </FormControl>
             <LoadingButton
               size="large"
-              endIcon={<LoginIcon />}
+              endIcon={<FontAwesomeIcon icon={faRightToBracket} />}
               onClick={handleClick}
               loading={loading}
               loadingPosition="end"

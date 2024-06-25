@@ -26,7 +26,6 @@ import { useState } from "react";
 import { APP_BACKEND } from "../config/constant";
 import api from "../services/AxiosInterceptor";
 import { Pagination, Alert, LoadingButton, Autocomplete } from "@mui/lab";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCirclePlus,
   faPenToSquare,
@@ -35,28 +34,30 @@ import {
   faUserPlus,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const WaliSantriPage = () => {
+export const PengajarPage = () => {
   const [rows, setRows] = useState([]);
+  const [spesialisasi, setSpesialisasi] = useState([]);
   const [total, setTotal] = useState();
   const [notification, setNotification] = useState("");
-  const [waliSantriId, setWaliSantriId] = useState("");
+  const [pengajarId, setPengajarId] = useState("");
   const [open, setOpen] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [walisantri, setWaliSantri] = useState({
+  const [pengajar, setPengajar] = useState({
     nama: "",
-    alamat: "",
-    telepon: ""
+    spesialisasi: "",
+    telepon: "",
   });
   const [param, setParam] = useState({
     nama: "",
-    alamat: "",
+    spesialisasi: "",
     telepon: "",
     page: 1,
     limit: 10,
@@ -78,16 +79,16 @@ export const WaliSantriPage = () => {
       ),
     },
     {
-      id: "alamat",
-      label: "Alamat",
+      id: "spesialisasi",
+      label: "Spesialisasi",
       minWidth: 250,
       filter: (
         <TextField
           id="outlined-basic"
-          label="Alamat"
+          label="Spesialisasi"
           variant="outlined"
           className="w-full"
-          onBlur={(e) => handleAlamat(e)}
+          onBlur={(e) => handleSpesialisasi(e)}
         />
       ),
     },
@@ -114,20 +115,30 @@ export const WaliSantriPage = () => {
 
   useEffect(() => {
     load({ ...param });
+    loadSpesialisasi();
   }, []);
 
   const load = async (props) => {
-    const { nama, telepon, alamat, page, limit } = props;
+    const { nama, telepon, spesialisasi, page, limit } = props;
 
     const request = await api.get(
       APP_BACKEND +
-        `/wali-santri/get-list-wali-santri?nama=${nama}&telepon=${telepon}&alamat=${alamat}&page=${page}&limit=${limit}`
+        `/pengajar/get-list-pengajar?nama=${nama}&telepon=${telepon}&spesialisasi=${spesialisasi}&page=${page}&limit=${limit}`
     );
     const response = await request.data;
     const data = response?.data?.list;
     const count = response?.data?.total;
     setRows(data);
     setTotal(count);
+  };
+
+  const loadSpesialisasi = async () => {
+    const request = await api.get(
+      APP_BACKEND + "/spesialisasi/get-list-spesialisasi"
+    );
+    const response = await request.data;
+    const data = response?.data;
+    setSpesialisasi(data);
   };
 
   const handleNama = (e) => {
@@ -137,11 +148,10 @@ export const WaliSantriPage = () => {
     setParam({ ...param, page: 1, nama });
   };
 
-  const handleAlamat = (e) => {
-    const alamat = e.target.value;
+  const handleSpesialisasi = (e) => {
     setRows([]);
-    load({ ...param, page: 1, alamat });
-    setParam({ ...param, page: 1, alamat });
+    load({ ...param, page: 1, spesialisasi: e.target.value });
+    setParam({ ...param, page: 1, spesialisasi: e.target.value });
   };
 
   const handleTelepon = (e) => {
@@ -166,13 +176,13 @@ export const WaliSantriPage = () => {
   const handleUpdate = (data) => {
     setIsUpdate(true);
     setOpen(true);
-    setWaliSantri(data);
-    setWaliSantriId(data?.id);
+    setPengajar(data);
+    setPengajarId(data?.id);
   };
 
-  const handleDelete = async (idWaliSantri) => {
+  const handleDelete = async (idPengajar) => {
     const request = await api.delete(
-      APP_BACKEND + `/wali-santri/delete?id=${idWaliSantri}`
+      APP_BACKEND + `/pengajar/delete?id=${idPengajar}`
     );
     const response = await request?.data?.detail;
     setNotification(response);
@@ -188,10 +198,10 @@ export const WaliSantriPage = () => {
   const handleClose = () => {
     setOpen(false);
     setIsUpdate(false);
-    setWaliSantri({
+    setPengajar({
       nama: "",
-      alamat: "",
-      telepon: ""
+      spesialisasi: "",
+      telepon: "",
     })
   };
 
@@ -204,8 +214,8 @@ export const WaliSantriPage = () => {
     setLoading(true);
 
     const method = isUpdate
-      ? api.put(`/wali-santri/update?id=${waliSantriId}`, walisantri)
-      : api.post(APP_BACKEND + "/wali-santri/create", walisantri);
+      ? api.put(`/pengajar/update?id=${pengajarId}`, pengajar)
+      : api.post(APP_BACKEND + "/pengajar/create", pengajar);
 
     const request = await method;
 
@@ -217,12 +227,20 @@ export const WaliSantriPage = () => {
     setRows([]);
     load({ ...param });
     setOpenAlert(true);
-    setWaliSantri({
+    setPengajar({
       nama: "",
-      alamat: "",
-      telepon: ""
+      spesialisasi: "",
+      telepon: "",
     })
   };
+
+  const handleValue = (param) => {
+    let i = 0
+    spesialisasi.map((e, idx) => {
+      if (e?.spesialisasi == param) i = idx
+    })
+    return param !== "" ? spesialisasi[i] : null
+  }
 
   return (
     <>
@@ -230,14 +248,14 @@ export const WaliSantriPage = () => {
         <MiniDrawer />
         <div className="flex flex-col mt-14 mr-4 h-5/6 w-full p-4 bg-gray-50 rounded-md">
           <div className="flex justify-between w-full p-2">
-            <p className="font-bold text-3xl">Data Wali Santri</p>
+            <p className="font-bold text-3xl">Data Pengajar</p>
             <Button
               variant="contained"
-              className="h-10 w-90"
+              className="h-10 w-60"
               startIcon={<FontAwesomeIcon icon={faCirclePlus} />}
               onClick={handleClickOpen}
             >
-              Tambah Data Wali Santri
+              Tambah Data Pengajar
             </Button>
           </div>
           <Divider />
@@ -268,7 +286,7 @@ export const WaliSantriPage = () => {
                           {row.nama}
                         </TableCell>
                         <TableCell style={{ minWidth: 250 }} align="left">
-                          {row.alamat}
+                          {row.spesialisasi}
                         </TableCell>
                         <TableCell style={{ minWidth: 250 }} align="left">
                           {row.telepon}
@@ -350,7 +368,7 @@ export const WaliSantriPage = () => {
               <FontAwesomeIcon icon={faXmark} />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              {isUpdate ? "Form Update Wali Santri" : "Form Tambah Wali Santri"}
+              {isUpdate ? "Form Update Pengajar" : "Form Tambah Pengajar"}
             </Typography>
           </Toolbar>
           <Paper
@@ -363,40 +381,50 @@ export const WaliSantriPage = () => {
               label="Nama"
               variant="outlined"
               className="w-2/5"
-              value={walisantri.nama}
-              onChange={(e) => setWaliSantri({ ...walisantri, nama: e.target.value })}
-            />
-            <TextField
-              id="outlined-basic"
-              label="Alamat"
-              variant="outlined"
-              className="w-2/5"
-              value={walisantri.alamat}
-              onChange={(e) => setWaliSantri({ ...walisantri, alamat: e.target.value })}
+              value={pengajar.nama}
+              onChange={(e) =>
+                setPengajar({ ...pengajar, nama: e.target.value })
+              }
             />
             <TextField
               id="outlined-basic"
               label="Telepon"
               variant="outlined"
               className="w-2/5"
-              value={walisantri.telepon}
-              onChange={(e) => setWaliSantri({ ...walisantri, telepon: e.target.value })}
+              value={pengajar.telepon}
+              onChange={(e) =>
+                setPengajar({ ...pengajar, telepon: e.target.value })
+              }
+            />
+            <Autocomplete
+              id="spesialisasi"
+              options={spesialisasi}
+              getOptionLabel={(option) => option?.spesialisasi}
+              defaultValue={handleValue(pengajar.spesialisasi)}
+              onChange={(_e, value) => {
+                setPengajar({ ...pengajar, spesialisasi: value?.spesialisasi });
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Pilih Spesialisasi" variant="standard" />
+              )}
+              className="w-2/5"
             />
             <LoadingButton
               size="large"
-              endIcon={isUpdate ? (<FontAwesomeIcon
-                    icon={faPenToSquare}
-                  />
+              endIcon={
+                isUpdate ? (
+                  <FontAwesomeIcon icon={faPenToSquare} />
                 ) : (
                   <FontAwesomeIcon icon={faUserPlus} />
-                )}
+                )
+              }
               onClick={handleSubmit}
               loading={loading}
               loadingPosition="end"
               variant="contained"
               className="w-2/5"
             >
-              <span>{isUpdate ? "Update Wali Santri" : "Tambah Wali Santri"}</span>
+              <span>{isUpdate ? "Update Pengajar" : "Tambah Pengajar"}</span>
             </LoadingButton>
           </Paper>
         </AppBar>

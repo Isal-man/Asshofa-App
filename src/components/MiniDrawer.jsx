@@ -14,20 +14,24 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import PeopleIcon from '@mui/icons-material/People';
 import { Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
-import { AccountCircle } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../services/AuthService";
-import { FamilyRestroom } from "@mui/icons-material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChalkboardUser,
+  faCircleUser,
+  faChevronLeft,
+  faChevronRight,
+  faBars,
+  faPeopleGroup,
+  faPeopleRoof,
+} from "@fortawesome/free-solid-svg-icons";
 
 const drawerWidth = 240;
 
@@ -98,10 +102,10 @@ const Drawer = styled(MuiDrawer, {
 
 export const MiniDrawer = () => {
   const theme = useTheme();
-  const {handleToken} = useAuth()
+  const { handleToken } = useAuth();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -122,12 +126,12 @@ export const MiniDrawer = () => {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem("token")
-    handleToken(null)
+    localStorage.removeItem("token");
+    handleToken(null);
     navigate("/login", {
-      replace: true
-    })
-  }
+      replace: true,
+    });
+  };
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -177,7 +181,7 @@ export const MiniDrawer = () => {
                   ...(open && { display: "none" }),
                 }}
               >
-                <MenuIcon />
+                <FontAwesomeIcon icon={faBars} />
               </IconButton>
               <Typography variant="h6" noWrap component="div">
                 Asshofa Management App
@@ -193,7 +197,7 @@ export const MiniDrawer = () => {
                 onClick={handleProfileMenuOpen}
                 color="inherit"
               >
-                <AccountCircle />
+                <FontAwesomeIcon icon={faCircleUser} />
               </IconButton>
             </Box>
           </Toolbar>
@@ -204,56 +208,82 @@ export const MiniDrawer = () => {
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
+              <FontAwesomeIcon icon={faChevronRight} className="text-black" />
             ) : (
-              <ChevronLeftIcon />
+              <FontAwesomeIcon icon={faChevronLeft} className="text-black" />
             )}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-            <ListItem disablePadding sx={{ display: "block" }}>
-              <ListItemButton
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => navigate("/santri")}
+              title="Santri"
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
                 }}
-                onClick={() => navigate("/santri")}
-                title="Santri"
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <PeopleIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Santri"} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-              <ListItemButton
+                <FontAwesomeIcon icon={faPeopleGroup} className="text-black" />
+              </ListItemIcon>
+              <ListItemText primary={"Santri"} sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => navigate("/wali-santri")}
+              title="Wali Santri"
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
                 }}
-                onClick={() => navigate("/wali-santri")}
-                title="Wali Santri"
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <FamilyRestroom />
-                </ListItemIcon>
-                <ListItemText primary={"Wali Santri"} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
+                <FontAwesomeIcon icon={faPeopleRoof} className="text-black" />
+              </ListItemIcon>
+              <ListItemText
+                primary={"Wali Santri"}
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => navigate("/pengajar")}
+              title="Pengajar"
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <FontAwesomeIcon icon={faChalkboardUser} className="text-black" />
+              </ListItemIcon>
+              <ListItemText
+                primary={"Pengajar"}
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1 }}>

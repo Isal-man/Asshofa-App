@@ -4,8 +4,6 @@ import {
   AppBar,
   Button,
   Dialog,
-  DialogContent,
-  DialogTitle,
   Divider,
   IconButton,
   MenuItem,
@@ -24,21 +22,23 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { AddCircleOutline } from "@mui/icons-material";
-import CloseIcon from "@mui/icons-material/Close";
-import CreateIcon from "@mui/icons-material/Create";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";
 import { APP_BACKEND } from "../config/constant";
 import api from "../services/AxiosInterceptor";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Pagination, Alert, LoadingButton, Autocomplete } from "@mui/lab";
-import { Person } from "@mui/icons-material";
-import { PersonAdd } from "@mui/icons-material";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCirclePlus,
+  faPenToSquare,
+  faTrash,
+  faXmark,
+  faUserPlus,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -50,7 +50,7 @@ export const SantriPage = () => {
   const [total, setTotal] = useState();
   const [notification, setNotification] = useState("");
   const [santriId, setSantriId] = useState("");
-  const [namaWali, setNamaWali] = useState("")
+  const [namaWali, setNamaWali] = useState("");
   const [open, setOpen] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
@@ -69,10 +69,6 @@ export const SantriPage = () => {
     page: 1,
     limit: 10,
   });
-  const waliSantriProps = {
-    options: waliSantri,
-    getOptionLabel: (options) => options?.nama || "",
-  };
 
   const columns = [
     {
@@ -211,7 +207,7 @@ export const SantriPage = () => {
     setOpen(true);
     setSantri(data);
     setSantriId(data?.id);
-    setNamaWali(data?.namaWali)
+    setNamaWali(data?.namaWali);
   };
 
   const handleDelete = async (idSantri) => {
@@ -232,6 +228,13 @@ export const SantriPage = () => {
   const handleClose = () => {
     setOpen(false);
     setIsUpdate(false);
+    setNamaWali("")
+    setSantri({
+      nama: "",
+      alamat: "",
+      tanggalLahir: "",
+      idWali: "",
+    })
   };
 
   const handleCloseNotif = () => {
@@ -256,7 +259,22 @@ export const SantriPage = () => {
     setRows([]);
     load({ ...param });
     setOpenAlert(true);
+    setNamaWali("")
+    setSantri({
+      nama: "",
+      alamat: "",
+      tanggalLahir: "",
+      idWali: "",
+    })
   };
+
+  const handleValue = (param) => {
+    let i = 0
+    waliSantri.map((e, idx) => {
+      if (e.nama === param) i = idx
+    })
+    return param !== "" ? waliSantri[i] : null
+  }
 
   return (
     <>
@@ -268,7 +286,7 @@ export const SantriPage = () => {
             <Button
               variant="contained"
               className="h-10 w-60"
-              startIcon={<AddCircleOutline />}
+              startIcon={<FontAwesomeIcon icon={faCirclePlus} />}
               onClick={handleClickOpen}
             >
               Tambah Data Santri
@@ -316,10 +334,16 @@ export const SantriPage = () => {
                         </TableCell>
                         <TableCell style={{ minWidth: 250 }} align="left">
                           <IconButton onClick={() => handleUpdate(row)}>
-                            <CreateIcon color="primary" />
+                            <FontAwesomeIcon
+                              icon={faPenToSquare}
+                              className="text-blue-500"
+                            />
                           </IconButton>
                           <IconButton onClick={() => handleDelete(row.id)}>
-                            <DeleteIcon color="error" />
+                            <FontAwesomeIcon
+                              icon={faTrash}
+                              className="text-red-500"
+                            />
                           </IconButton>
                         </TableCell>
                       </TableRow>
@@ -382,7 +406,7 @@ export const SantriPage = () => {
               onClick={handleClose}
               aria-label="close"
             >
-              <CloseIcon />
+              <FontAwesomeIcon icon={faXmark} />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               {isUpdate ? "Form Update Santri" : "Form Tambah Santri"}
@@ -392,7 +416,7 @@ export const SantriPage = () => {
             className="flex flex-col items-center gap-4 p-2 h-full"
             elevation={3}
           >
-            <Person sx={{ width: "35%", height: "35%" }} />
+            <FontAwesomeIcon icon={faUser} className="size-1/4 p-4" />
             <TextField
               id="outlined-basic"
               label="Nama"
@@ -413,20 +437,24 @@ export const SantriPage = () => {
               <DatePicker
                 label="Tanggal Lahir"
                 className="w-2/5"
-                value={dayjs(santri.tanggalLahir)}
+                value={dayjs(new Date().getTime())}
                 onChange={(e) => setSantri({ ...santri, tanggalLahir: e?.$d })}
               />
             </LocalizationProvider>
             <Autocomplete
-              {...waliSantriProps}
               id="wali-santri"
-              value={namaWali ? namaWali : waliSantri?.nama}
-              onChange={(_e, value) => {  
-                setSantri({...santri, idWali: value?.id})
+              options={waliSantri}
+              getOptionLabel={(options) => options?.nama}
+              defaultValue={handleValue(namaWali)}
+              onChange={(_e, value) => {
+                setSantri({ ...santri, idWali: value?.id });
               }}
               noOptionsText={
                 <span>
-                  Tidak ada opsi yang sesuai. <Link to="/wali-santri" className="underline text-blue-500">Tambah data wali santri</Link>
+                  Tidak ada opsi yang sesuai.{" "}
+                  <Link to="/wali-santri" className="underline text-blue-500">
+                    Tambah data wali santri
+                  </Link>
                 </span>
               }
               renderInput={(params) => (
@@ -436,7 +464,13 @@ export const SantriPage = () => {
             />
             <LoadingButton
               size="large"
-              endIcon={isUpdate ? <EditIcon /> : <PersonAdd />}
+              endIcon={
+                isUpdate ? (
+                  <FontAwesomeIcon icon={faPenToSquare} />
+                ) : (
+                  <FontAwesomeIcon icon={faUserPlus} />
+                )
+              }
               onClick={handleSubmit}
               loading={loading}
               loadingPosition="end"
