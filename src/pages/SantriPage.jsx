@@ -198,8 +198,8 @@ export const SantriPage = () => {
 
   const handleLimitChange = (e) => {
     setRows([]);
-    load({ ...param, limit: e.target.value });
-    setParam({ ...param, limit: e.target.value });
+    load({ ...param, page: 1, limit: e.target.value });
+    setParam({ ...param, page: 1, limit: e.target.value });
   };
 
   const handleUpdate = (data) => {
@@ -336,7 +336,7 @@ export const SantriPage = () => {
                           <IconButton onClick={() => handleUpdate(row)}>
                             <FontAwesomeIcon
                               icon={faPenToSquare}
-                              className="text-blue-500"
+                              className="text-cyan-500"
                             />
                           </IconButton>
                           <IconButton onClick={() => handleDelete(row.id)}>
@@ -452,7 +452,7 @@ export const SantriPage = () => {
               noOptionsText={
                 <span>
                   Tidak ada opsi yang sesuai.{" "}
-                  <Link to="/wali-santri" className="underline text-blue-500">
+                  <Link to="/wali-santri" className="underline text-cyan-500">
                     Tambah data wali santri
                   </Link>
                 </span>

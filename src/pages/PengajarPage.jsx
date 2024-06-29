@@ -169,8 +169,8 @@ export const PengajarPage = () => {
 
   const handleLimitChange = (e) => {
     setRows([]);
-    load({ ...param, limit: e.target.value });
-    setParam({ ...param, limit: e.target.value });
+    load({ ...param, page: 1, limit: e.target.value });
+    setParam({ ...param, page: 1, limit: e.target.value });
   };
 
   const handleUpdate = (data) => {
@@ -280,7 +280,7 @@ export const PengajarPage = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
+                    {rows?.map((row) => (
                       <TableRow key={row.id}>
                         <TableCell style={{ minWidth: 250 }} align="left">
                           {row.nama}
@@ -295,7 +295,7 @@ export const PengajarPage = () => {
                           <IconButton onClick={() => handleUpdate(row)}>
                             <FontAwesomeIcon
                               icon={faPenToSquare}
-                              className="text-blue-500"
+                              className="text-cyan-500"
                             />
                           </IconButton>
                           <IconButton onClick={() => handleDelete(row.id)}>

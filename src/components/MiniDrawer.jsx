@@ -31,6 +31,7 @@ import {
   faBars,
   faPeopleGroup,
   faPeopleRoof,
+  faClipboardList
 } from "@fortawesome/free-solid-svg-icons";
 
 const drawerWidth = 240;
@@ -280,6 +281,29 @@ export const MiniDrawer = () => {
               </ListItemIcon>
               <ListItemText
                 primary={"Pengajar"}
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => navigate("/jadwal")}
+              title="Jadwal Pengajaran"
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <FontAwesomeIcon icon={faClipboardList} className="text-black" />
+              </ListItemIcon>
+              <ListItemText
+                primary={"Jadwal Pengajaran"}
                 sx={{ opacity: open ? 1 : 0 }}
               />
             </ListItemButton>

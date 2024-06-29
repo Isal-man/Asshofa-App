@@ -7,12 +7,12 @@ import {
   IconButton,
   Link
 } from "@mui/material";
-import { Visibility, VisibilityOff   } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab"
-import LoginIcon from '@mui/icons-material/Login';
 import { useState } from "react";
 import { APP_BACKEND } from "../config/constant";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash, faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 
 export const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -103,7 +103,7 @@ export const RegisterPage = () => {
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                      {showPassword ? <FontAwesomeIcon icon={faEye} /> :  <FontAwesomeIcon icon={faEyeSlash} />}
                     </IconButton>
                   </InputAdornment>
                 }
@@ -113,7 +113,7 @@ export const RegisterPage = () => {
             </FormControl>
             <LoadingButton
               size="large"
-              endIcon={<LoginIcon />}
+              endIcon={<FontAwesomeIcon icon={faRightToBracket} />}
               onClick={handleClick}
               loading={loading}
               loadingPosition="end"
