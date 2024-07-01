@@ -216,6 +216,7 @@ export const WaliSantriPage = () => {
     setNotification(response);
     setRows([]);
     load({ ...param });
+    setIsUpdate(false)
     setOpenAlert(true);
     setWaliSantri({
       nama: "",

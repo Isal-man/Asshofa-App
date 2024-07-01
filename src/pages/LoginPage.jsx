@@ -45,7 +45,7 @@ export const LoginPage = () => {
 
     handleToken(response)
     setLoading(false)
-    navigate("/santri", {
+    navigate("/", {
       replace: true
     })
 	}

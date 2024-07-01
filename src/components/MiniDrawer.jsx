@@ -33,6 +33,7 @@ import {
   faPeopleRoof,
   faClipboardList
 } from "@fortawesome/free-solid-svg-icons";
+import { faHouse } from "@fortawesome/free-solid-svg-icons";
 
 const drawerWidth = 240;
 
@@ -218,6 +219,26 @@ export const MiniDrawer = () => {
         <Divider />
         <List>
           <ListItem disablePadding sx={{ display: "block" }}>
+          <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={() => navigate("/")}
+              title="Home"
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <FontAwesomeIcon icon={faHouse} className="text-black" />
+              </ListItemIcon>
+              <ListItemText primary={"Santri"} sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
             <ListItemButton
               sx={{
                 minHeight: 48,

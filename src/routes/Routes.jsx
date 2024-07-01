@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ProtectedRoute } from "../components";
-import { JadwalPengajaranPage, LoginPage, PengajarPage, RegisterPage, SantriPage, WaliSantriPage } from "../pages";
+import { DashboardPage, JadwalPengajaranPage, LoginPage, PengajarPage, RegisterPage, SantriPage, WaliSantriPage } from "../pages";
 import { useEffect } from "react";
 
 const Routes = () => {
@@ -15,6 +15,10 @@ const Routes = () => {
       path: "/",
       element: <ProtectedRoute />,
       children: [
+        {
+          path: "/",
+          element: <DashboardPage />
+        },
         {
           path: "/santri",
           element: <SantriPage />,

@@ -422,9 +422,11 @@ export const JadwalPengajaranPage = () => {
     setLoading(false);
     setNotification(responseSubmit);
     setPenilaian(isUpdate ? [] : [data, ...penilaian]);
+    !isUpdate && setTotalPenilaian(totalPenilaian + 1)
     isUpdate && loadPenilaian({ ...paramPenilaian, idJadwal: jadwalPengajaranId });
     setOpenAlert(true);
     setIsTambahPelajar(false)
+    setIsUpdate(false)
     setPenilaianId("")
     setBodyPenilaian({
       idSantri: "",
@@ -450,21 +452,6 @@ export const JadwalPengajaranPage = () => {
     });
     return param ? pengajar[i] : null;
   };
-
-  const handleSelectPelajar = useCallback((callback, delay) => {
-    return (event) => {
-      if (timer.current) {
-        clearTimeout(timer.current);
-      }
-      timer.current = setTimeout(() => {
-        callback(event);
-      }, delay);
-    };
-  }, []);
-
-  const getData = (event, flag) => {};
-
-  const debouncedHandleChange = handleSelectPelajar(getData, 3000);
 
   return (
     <>

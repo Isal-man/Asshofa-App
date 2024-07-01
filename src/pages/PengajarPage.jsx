@@ -226,6 +226,7 @@ export const PengajarPage = () => {
     setNotification(response);
     setRows([]);
     load({ ...param });
+    setIsUpdate(false)
     setOpenAlert(true);
     setPengajar({
       nama: "",

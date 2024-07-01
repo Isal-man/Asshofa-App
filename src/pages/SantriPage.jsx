@@ -259,6 +259,7 @@ export const SantriPage = () => {
     setRows([]);
     load({ ...param });
     setOpenAlert(true);
+    setIsUpdate(false)
     setNamaWali("")
     setSantri({
       nama: "",
